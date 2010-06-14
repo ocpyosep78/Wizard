@@ -9,11 +9,14 @@
 		// declare some vars
 		private $name; // store form name
 		private $fields; // array which will store all input fields
-		private $isComplete; // flag for is complete / validated
+		private $title; // title for the form
 		private $callbackSuccess; // callback to execute on success
-		
-		function __construct($name, $callbackSuccess = null) {	// must create the form with a name
+
+		private $isComplete; // flag for is complete / validated
+
+		function __construct($name, $title = '', $callbackSuccess = null) {	// must create the form with a name
 			$this->name = $name;
+			$this->title = $title;
 			$this->fields = array();
 			$this->isComplete = false;
 			$this->callbackSuccess = $callbackSuccess;
@@ -52,7 +55,11 @@
 		function getErrors() {
 			return $this->validate();
 		}
-		
+
+		function getTitle() {
+			return $this->title;
+		}
+
 		// render the errors
 		function errors($errors) {
 			$output = '<div class=\'wizardErrorsDiv\'>';
@@ -70,7 +77,8 @@
 		
 		// draw the form
 		function draw() {
-			$output = '<form method=\'POST\' id=\''. $this->name .'\' name=\''. $this->name .'\'';
+			$output .= '<h2 class=\'wizardFormTitle\'>'. $this->title . '</h2>';
+			$output .= '<form method=\'POST\' id=\''. $this->name .'\' name=\''. $this->name .'\'';
 
 			foreach($this->fields as $field) {
 				$output .= '<div class=\'wizardFieldDiv\'>';

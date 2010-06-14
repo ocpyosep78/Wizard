@@ -2,7 +2,13 @@
 	require_once('form.php');
 
 	class Wizard {
-		private $forms ; // array to store all forms
+		/*
+			Settings:
+				showStages = true | false
+		*/
+		private $settings; // store settings
+
+		private $forms; // array to store all forms
 		private $currentFormIndex; // current form index
 
 		private static $instance; // keep an instance of this class;
@@ -13,10 +19,18 @@
 				session_start();
 			}
 
-			$form =  new WizardForm('page1', 'success');
+			// make references to session
 			$this->forms = &$this->getSessionVar('forms', array());
 			$this->currentFormIndex = &$this->getSessionVar('currentFormIndex', 0);
 			$this->initialized = &$this->getSessionVar('initialized', false);
+
+			// set default settings
+			$this->settings['showStages'] = true;
+		}
+
+		// set a setting to a given value
+		function set($setting, $value) {
+			$settings[$setting] = $value;
 		}
 
 		// get a session variable if it exists, if not use default value
@@ -61,7 +75,25 @@
 			if(unserialize($this->forms[$this->currentFormIndex])->getIsComplete()) // when the form is complete / validated
 				$this->nextForm();
 
-			return unserialize($this->forms[$this->currentFormIndex])->render(); // render the current form
+			$output = $this->showStages(); // stages
+			$output .= unserialize($this->forms[$this->currentFormIndex])->render(); // render the current form
+			return $output;
+		}
+
+		// output the stages
+		function showStages() {
+			if(!$this->settings['showStages'])
+				return;
+
+			$output .= '<div id=\'wizardStages\'>';
+
+			foreach($this->forms as $form) {
+				$output .= '<div class=\'wizardStage\'>'. unserialize($form)->getTitle() .'</div>';
+			}
+
+			$output .= '</div>';
+
+			return $output;
 		}
 	}
 ?>
