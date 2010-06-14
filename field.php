@@ -70,12 +70,12 @@
 
 		// draw a basic text input
 		function textField() {
-			return '<label for=\''. $this->name .'\'>'. $this->label .'</label><input type=\'text\' class=\'wizardTextField\' id=\''. $this->name .'\' name=\''. $this->name .'\'/>';
+			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'text\' class=\'wizardTextField\' id=\''. $this->name .'\' name=\''. $this->name .'\'/>';
 		}
 		
 		// draw a basic text area
 		function textAreaField() {
-			return '<label for=\''. $this->name .'\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'></textarea>';
+			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'></textarea>';
 		}
 	}
 ?>

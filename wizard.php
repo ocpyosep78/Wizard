@@ -30,7 +30,7 @@
 
 		// set a setting to a given value
 		function set($setting, $value) {
-			$settings[$setting] = $value;
+			$this->settings[$setting] = $value;
 		}
 
 		// get a session variable if it exists, if not use default value
@@ -85,10 +85,11 @@
 			if(!$this->settings['showStages'])
 				return;
 
-			$output .= '<div id=\'wizardStages\'>';
+			$output .= '<div class=\'wizardStages\'>';
 
 			foreach($this->forms as $form) {
-				$output .= '<div class=\'wizardStage\'>'. unserialize($form)->getTitle() .'</div>';
+				$class = ($form == $this->forms[$this->currentFormIndex]) ? 'wizardStageActive' : 'wizardStage';
+				$output .= '<div class=\''. $class .'\'>'. unserialize($form)->getTitle() .'</div>';
 			}
 
 			$output .= '</div>';

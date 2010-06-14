@@ -37,8 +37,8 @@
 			array_push($this->fields, new WizardField($name, $label, $type, $validation, $outputError)); // push the newly created object;
 		}
 
-		// execute the form and get the output
-		function render() {
+		// prerender the form
+		function prerender() {
 			if(!$_POST[$this->name.'_submit'])
 				return $this->draw();
 			
@@ -49,6 +49,16 @@
 				$callback = $this->callbackSuccess;
 				return $callback(); // execute a success function
 			}
+		}
+
+		// execute the form and get the output
+		function render() {
+			$output = '<div class=\'wizardForm\'>';
+			$output .= '<h2 class=\'wizardFormTitle\'>'. $this->title . '</h2>';
+			$output .= ']~content~[';
+			$output .= '</div>';
+
+			return preg_replace('/\]\~content\~\[/', $this->prerender(), $output);
 		}
 
 		// check for errors
@@ -62,7 +72,7 @@
 
 		// render the errors
 		function errors($errors) {
-			$output = '<div class=\'wizardErrorsDiv\'>';
+			$output = '<div class=\'wizardErrors\'>';
 			$output .= '<ul>';
 			
 			foreach($errors as $field) {
@@ -77,11 +87,10 @@
 		
 		// draw the form
 		function draw() {
-			$output .= '<h2 class=\'wizardFormTitle\'>'. $this->title . '</h2>';
 			$output .= '<form method=\'POST\' id=\''. $this->name .'\' name=\''. $this->name .'\'';
 
 			foreach($this->fields as $field) {
-				$output .= '<div class=\'wizardFieldDiv\'>';
+				$output .= '<div class=\'wizardField\'>';
 				$output .= $field->render(); // get the output of a field
 				$output .= '</div>';
 			}
