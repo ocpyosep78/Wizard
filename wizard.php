@@ -10,9 +10,10 @@
 
 		private $forms; // array to store all forms
 		private $currentFormIndex; // current form index
+		private $initialized; // know if its been initalized already and added the forms
+		private $uri; // where the script is running
 
 		private static $instance; // keep an instance of this class;
-		private $initialized; // know if its been initalized already and added the forms
 
 		private function __construct() {
 			if(!session_id()) { // if a session doesnt exist start it
@@ -23,6 +24,11 @@
 			$this->forms = &$this->getSessionVar('forms', array());
 			$this->currentFormIndex = &$this->getSessionVar('currentFormIndex', 0);
 			$this->initialized = &$this->getSessionVar('initialized', false);
+			$this->uri = &$this->getSessionVar('uri', $_SERVER['REQUEST_URI']);
+
+			// the URIs dont match (makes sure only one wizard so sessions dont go crazy);
+			if(!$this->matchURI())
+				$this->reset();
 
 			// set default settings
 			$this->settings['showStages'] = true;
@@ -31,6 +37,21 @@
 		// set a setting to a given value
 		function set($setting, $value) {
 			$this->settings[$setting] = $value;
+		}
+
+		// reset the wizard
+		private function reset() {
+			$this->forms = array();
+			$this->currentFormIndex = 0;
+			$this->initialized = false;
+			$this->uri = $_SERVER['REQUEST_URI'];
+
+			$this->settings['showStages'] = true;
+		}
+
+		// match current URI with session one
+		private function matchURI() {
+			return $this->uri == $_SERVER['REQUEST_URI'];
 		}
 
 		// get a session variable if it exists, if not use default value
