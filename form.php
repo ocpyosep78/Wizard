@@ -8,12 +8,25 @@
 	class WizardForm {
 		// declare some vars
 		private $name; // store form name
-		private $fields = array(); // array which will store all input fields
-		private $callbackSuccess;
+		private $fields; // array which will store all input fields
+		private $isComplete; // flag for is complete / validated
+		private $callbackSuccess; // callback to do un success
 		
 		function __construct($name, $callbackSuccess = null) {	// must create the form with a name
 			$this->name = $name;
+			$this->fields = array();
+			$this->isComplete = false;
 			$this->callbackSuccess = $callbackSuccess;
+		}
+
+		// get the complete flag
+		function getIsComplete() {
+			if($this->getErrors())
+				$this->isComplete = 0;
+			else
+				$this->isComplete = 1;
+
+			return $this->isComplete;
 		}
 
 		// add fields to the array
@@ -25,17 +38,19 @@
 		function render() {
 			if(!$_POST)
 				return $this->draw();
-		
-			if($_POST) // if there is a POST validate the form  TODO MAKE IT CHECK FOR A POST OF ITS OWN FORM NAME
-				$errors = $this->validate();
 			
-			if($errors)
-				return $this->errors($errors) . $this->draw(); // output the errors, and render the form again
-			
+			if(!$this->getIsComplete())
+				return $this->errors($this->getErrors()) . $this->draw(); // output the errors, and render the form again
+
 			if($this->callbackSuccess) {
 				$callback = $this->callbackSuccess;
 				return $callback(); // execute a success function
 			}
+		}
+
+		// check for errors
+		function getErrors() {
+			return $this->validate();
 		}
 		
 		// render the errors
