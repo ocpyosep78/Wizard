@@ -10,7 +10,7 @@
 		private $name; // store form name
 		private $fields; // array which will store all input fields
 		private $isComplete; // flag for is complete / validated
-		private $callbackSuccess; // callback to do un success
+		private $callbackSuccess; // callback to execute on success
 		
 		function __construct($name, $callbackSuccess = null) {	// must create the form with a name
 			$this->name = $name;
@@ -36,7 +36,7 @@
 
 		// execute the form and get the output
 		function render() {
-			if(!$_POST)
+			if(!$_POST[$this->name.'_submit'])
 				return $this->draw();
 			
 			if(!$this->getIsComplete())
@@ -70,7 +70,7 @@
 		
 		// draw the form
 		function draw() {
-			$output = '<form method=\'POST\' id=\''. $this->name .'\' id=\''.$this->name.'\'';
+			$output = '<form method=\'POST\' id=\''. $this->name .'\' name=\''. $this->name .'\'';
 
 			foreach($this->fields as $field) {
 				$output .= '<div class=\'wizardFieldDiv\'>';
@@ -78,7 +78,7 @@
 				$output .= '</div>';
 			}
 
-			$output .= '<div class=\'wizardSubmit\'><input type=\'submit\' value=\'Submit\'/></div>';
+			$output .= '<div class=\'wizardSubmit\'><input type=\'submit\' id=\''. $this->name .'_submit\' name=\''. $this->name .'_submit\' value=\'Submit\'/></div>';
 			$output .= '</form>';
 
 			return $output;
