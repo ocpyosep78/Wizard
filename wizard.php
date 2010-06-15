@@ -12,6 +12,7 @@
 		private $currentFormIndex; // current form index
 		private $initialized; // know if its been initalized already and added the forms
 		private $data; // store form data
+		private $callbackSuccess; // callback to execute on success
 		private $uri; // where the script is running
 
 		private static $instance; // keep an instance of this class;
@@ -39,6 +40,11 @@
 		// set a setting to a given value
 		function set($setting, $value) {
 			$this->settings[$setting] = $value;
+		}
+
+		// set the callback function
+		function setCallback($callback) {
+			$this->callbackSuccess = $callback;
 		}
 
 		// reset the wizard
@@ -93,17 +99,25 @@
 
 		// execute and output current form
 		function render() {
+			$this->save(); // save the data into session
+
 			if(!$this->initialized) // when render is called initializing is complete
 				$this->initialized = true;
 
 			if(unserialize($this->forms[$this->currentFormIndex])->getIsComplete()) // when the form is complete / validated
 				$this->nextForm();
 
-			$this->save(); // save the data into session
+			if($this->currentFormIndex == count($this->forms)-1 &&  // last form
+			     unserialize($this->forms[count($this->forms)-1])->getIsComplete() &&  // and complete
+			     $this->callbackSuccess) { // and have a callback
 
-			$output = $this->showStages(); // stages
-			$output .= unserialize($this->forms[$this->currentFormIndex])->render($this->data); // render the current form
-			return $output;
+				$callback = $this->callbackSuccess; // get the callback
+				$data = $this->data;
+				$this->reset();
+				return $output . $callback($data); // execute a success function
+			}
+		
+			return $this->showStages() . unserialize($this->forms[$this->currentFormIndex])->render($this->data); // render the current form		
 		}
 
 		// save the data into sessions

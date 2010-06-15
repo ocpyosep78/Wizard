@@ -25,9 +25,9 @@
 		// get the complete flag
 		function getIsComplete() {
 			if($this->getErrors())
-				$this->isComplete = 0;
+				$this->isComplete = false;
 			else
-				$this->isComplete = 1;
+				$this->isComplete = true;
 
 			return $this->isComplete;
 		}
