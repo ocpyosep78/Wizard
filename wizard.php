@@ -11,6 +11,7 @@
 		private $forms; // array to store all forms
 		private $currentFormIndex; // current form index
 		private $initialized; // know if its been initalized already and added the forms
+		private $data; // store form data
 		private $uri; // where the script is running
 
 		private static $instance; // keep an instance of this class;
@@ -24,6 +25,7 @@
 			$this->forms = &$this->getSessionVar('forms', array());
 			$this->currentFormIndex = &$this->getSessionVar('currentFormIndex', 0);
 			$this->initialized = &$this->getSessionVar('initialized', false);
+			$this->data = &$this->getSessionVar('data', array());
 			$this->uri = &$this->getSessionVar('uri', $_SERVER['REQUEST_URI']);
 
 			// the URIs dont match (makes sure only one wizard so sessions dont go crazy);
@@ -44,6 +46,7 @@
 			$this->forms = array();
 			$this->currentFormIndex = 0;
 			$this->initialized = false;
+			$this->data = array();
 			$this->uri = $_SERVER['REQUEST_URI'];
 
 			$this->settings['showStages'] = true;
@@ -96,9 +99,20 @@
 			if(unserialize($this->forms[$this->currentFormIndex])->getIsComplete()) // when the form is complete / validated
 				$this->nextForm();
 
+			$this->save(); // save the data into session
+
 			$output = $this->showStages(); // stages
-			$output .= unserialize($this->forms[$this->currentFormIndex])->render(); // render the current form
+			$output .= unserialize($this->forms[$this->currentFormIndex])->render($this->data); // render the current form
 			return $output;
+		}
+
+		// save the data into sessions
+		private function save() {
+			$form = unserialize($this->forms[$this->currentFormIndex]); // current form
+
+			foreach($_POST as $key => $value) {
+				$this->data[$key] = $value;
+			}
 		}
 
 		// output the stages

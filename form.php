@@ -38,12 +38,12 @@
 		}
 
 		// prerender the form
-		function prerender() {
+		function prerender($data = null) {
 			if(!$_POST[$this->name.'_submit'])
-				return $this->draw();
+				return $this->draw($data);
 			
 			if(!$this->getIsComplete())
-				return $this->errors($this->getErrors()) . $this->draw(); // output the errors, and render the form again
+				return $this->errors($this->getErrors()) . $this->draw($data); // output the errors, and render the form again
 
 			if($this->callbackSuccess) {
 				$callback = $this->callbackSuccess;
@@ -52,13 +52,13 @@
 		}
 
 		// execute the form and get the output
-		function render() {
+		function render($data = null) {
 			$output = '<div class=\'wizardForm\'>';
 			$output .= '<h2 class=\'wizardFormTitle\'>'. $this->title . '</h2>';
 			$output .= ']~content~[';
 			$output .= '</div>';
 
-			return preg_replace('/\]\~content\~\[/', $this->prerender(), $output);
+			return preg_replace('/\]\~content\~\[/', $this->prerender($data), $output);
 		}
 
 		// check for errors
@@ -66,6 +66,7 @@
 			return $this->validate();
 		}
 
+		// return the title
 		function getTitle() {
 			return $this->title;
 		}
@@ -86,12 +87,12 @@
 		}
 		
 		// draw the form
-		function draw() {
+		function draw($data = null) {
 			$output .= '<form method=\'POST\' id=\''. $this->name .'\' name=\''. $this->name .'\'';
 
 			foreach($this->fields as $field) {
 				$output .= '<div class=\'wizardField\'>';
-				$output .= $field->render(); // get the output of a field
+				$output .= $field->render($data[$field->getName()]); // get the output of a field
 				$output .= '</div>';
 			}
 

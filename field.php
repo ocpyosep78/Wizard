@@ -26,15 +26,15 @@
 		}
 		
 		// execute and get output of the field
-		function render() {
+		function render($data = null) {
 			$output;
-			
+
 			switch($this->type) {
 				case 'text':
-					$output = $this->textField();
+					$output = $this->textField($data);
 					break;
 				case 'textarea':
-					$output = $this->textAreaField();
+					$output = $this->textAreaField($data);
 					break;
 			}
 			
@@ -57,6 +57,11 @@
 					break;
 			}
 		}
+
+		// return the name
+		function getName() {
+			return $this->name;
+		}
 		
 		// return the label
 		function getLabel() {
@@ -69,13 +74,13 @@
 		}
 
 		// draw a basic text input
-		function textField() {
-			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'text\' class=\'wizardTextField\' id=\''. $this->name .'\' name=\''. $this->name .'\'/>';
+		function textField($data = null) {
+			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'text\' class=\'wizardTextField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\''. $data .'\'/>';
 		}
 		
 		// draw a basic text area
-		function textAreaField() {
-			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'></textarea>';
+		function textAreaField($data = null) {
+			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'>'. $data .'</textarea>';
 		}
 	}
 ?>
