@@ -1,11 +1,20 @@
 <?php
 	require_once('form.php');
+	require_once('email.php');
 
 	class Wizard {
 		/*
+			This file handles the wizard itself.
 			Settings:
-				showStages = true | false
+				showStages = true | false >> default is true
+				email = true | false >> default is false
+				to = string >> to header for email
+				title = string >> title header for email
+				cc = string >> cc header for email
+				bcc = string >> bcc header for email
+				from = string >> from header for email
 		*/
+
 		private $settings; // store settings
 
 		private $forms; // array to store all forms
@@ -108,13 +117,32 @@
 				$this->nextForm();
 
 			if($this->currentFormIndex == count($this->forms)-1 &&  // last form
-			     unserialize($this->forms[count($this->forms)-1])->getIsComplete() &&  // and complete
-			     $this->callbackSuccess) { // and have a callback
+			     unserialize($this->forms[count($this->forms)-1])->getIsComplete()) { // and complete
 
-				$callback = $this->callbackSuccess; // get the callback
-				$data = $this->data;
-				$this->reset();
-				return $output . $callback($data); // execute a success function
+				$forms = $this->forms; // get the forms
+				$data = $this->data; // get the data
+				$this->reset(); // reset the session (prevent reposting)
+
+				// combine the form and data
+				$mixed = array(); // make an array that combines the form labels and data input, by key
+				foreach($forms as $form) { // get each form
+					foreach(unserialize($form)->getFields() as $field) {
+						$mixed[$field->getName()] = array($field->getLabel(), $data[$field->getName()]); // populate the data
+					}
+				}
+
+				// if email setting enabled
+				if($this->settings['email']) {
+					$email = new WizardEmail($this->settings['to'], $this->settings['title'], $this->settings['from'], $this->settings['cc'], $this->settings['bcc']); // make the email object
+					$email->send($mixed);
+				}
+
+				if($this->callbackSuccess) { // has a callback
+					$callback = $this->callbackSuccess; // get the callback
+					return $output . $callback($forms, $data, $mixed); // execute a success function (pass the form, data, and mixed to it)
+				}
+
+				return;
 			}
 		
 			return $this->showStages() . unserialize($this->forms[$this->currentFormIndex])->render($this->data); // render the current form		

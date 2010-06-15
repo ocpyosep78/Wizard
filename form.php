@@ -71,6 +71,11 @@
 			return $this->title;
 		}
 
+		// return the fields
+		function getFields() {
+			return $this->fields;
+		}
+
 		// render the errors
 		function errors($errors) {
 			$output = '<div class=\'wizardErrors\'>';
