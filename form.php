@@ -6,6 +6,13 @@
 	require_once('field.php');
 
 	class WizardForm {
+		/*
+			Settings:
+				submitLabel = string >> default is Submit
+		*/
+
+		private $settings; // store settings
+
 		// declare some vars
 		private $name; // store form name
 		private $fields; // array which will store all input fields
@@ -20,6 +27,13 @@
 			$this->fields = array();
 			$this->isComplete = false;
 			$this->callbackSuccess = $callbackSuccess;
+
+			$this->settings['submitLabel'] = 'Submit';
+		}
+
+		// set a setting to a given value
+		function set($setting, $value) {
+			$this->settings[$setting] = $value;
 		}
 
 		// get the complete flag
@@ -47,7 +61,7 @@
 
 			if($this->callbackSuccess) {
 				$callback = $this->callbackSuccess;
-				return $callback(); // execute a success function
+				return $callback($data); // execute a success function
 			}
 		}
 
@@ -99,9 +113,10 @@
 				$output .= '<div class=\'wizardField\'>';
 				$output .= $field->render($data[$field->getName()]); // get the output of a field
 				$output .= '</div>';
+
 			}
 
-			$output .= '<div class=\'wizardSubmit\'><input type=\'submit\' id=\''. $this->name .'_submit\' name=\''. $this->name .'_submit\' value=\'Submit\'/></div>';
+			$output .= '<div class=\'wizardSubmit\'><input type=\'submit\' id=\''. $this->name .'_submit\' name=\''. $this->name .'_submit\' value=\''. $this->settings['submitLabel'] .'\'/></div>';
 			$output .= '</form>';
 
 			return $output;

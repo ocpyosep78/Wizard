@@ -1,10 +1,13 @@
 <?php
+	/*
+			This file handles the wizard itself.
+	*/
+
 	require_once('form.php');
 	require_once('email.php');
 
 	class Wizard {
 		/*
-			This file handles the wizard itself.
 			Settings:
 				showStages = true | false >> default is true
 				email = true | false >> default is false
@@ -56,15 +59,13 @@
 			$this->callbackSuccess = $callback;
 		}
 
-		// reset the wizard
+		// reset the wizard, session data
 		private function reset() {
 			$this->forms = array();
 			$this->currentFormIndex = 0;
 			$this->initialized = false;
 			$this->data = array();
 			$this->uri = $_SERVER['REQUEST_URI'];
-
-			$this->settings['showStages'] = true;
 		}
 
 		// match current URI with session one
@@ -142,7 +143,7 @@
 					return $output . $callback($forms, $data, $mixed); // execute a success function (pass the form, data, and mixed to it)
 				}
 
-				return;
+				return; // return nothing
 			}
 		
 			return $this->showStages() . unserialize($this->forms[$this->currentFormIndex])->render($this->data); // render the current form		

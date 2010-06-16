@@ -36,6 +36,9 @@
 				case 'textarea':
 					$output = $this->textAreaField($data);
 					break;
+				case 'checkbox':
+					$output = $this->checkBox($data);
+					break;
 			}
 			
 			return $output;
@@ -81,6 +84,11 @@
 		// draw a basic text area
 		function textAreaField($data = null) {
 			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'>'. $data .'</textarea>';
+		}
+
+		// draw a checkbox
+		function checkBox($data = null) {
+			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\''. $data .'\'/>';
 		}
 	}
 ?>
