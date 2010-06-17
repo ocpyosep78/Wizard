@@ -14,8 +14,9 @@
 		private $type;
 		private $validation;
 		private $outputError;
+		private $params;
 
-		function __construct($name, $label, $type, $validation, $outputError) {
+		function __construct($name, $label, $type, $validation, $outputError, $params = null) {
 			$this->validator = new WizardFormValidator();
 		
 			$this->name = $name;
@@ -23,6 +24,7 @@
 			$this->type = $type;
 			$this->validation = $validation;
 			$this->outputError = $outputError;
+			$this->params = $params;
 		}
 		
 		// execute and get output of the field
@@ -39,6 +41,8 @@
 				case 'checkbox':
 					$output = $this->checkBox($data);
 					break;
+				case 'dropdown':
+					return $this->dropdown($data);
 			}
 			
 			return $output;
@@ -89,6 +93,17 @@
 		// draw a checkbox
 		function checkBox($data = null) {
 			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\''. $data .'\'/>';
+		}
+
+		// drop a dropdown
+		function dropdown($data = null) {
+			$output = '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><select class=\'wizardDropdown\' id=\''. $this->name .'\' name=\''. $this->name .'\'/>';
+			foreach($this->params as $option) {
+				$selected = $data == $option ? 'selected=\'true\'' : '';
+				$output .= '<option '. $selected .'>'. $option .'</option>';
+			}
+			$output .= '</select>';
+			return $output;
 		}
 	}
 ?>

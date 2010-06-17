@@ -47,8 +47,8 @@
 		}
 
 		// add fields to the array
-		function addField($name, $label, $type, $validation, $outputError) {
-			array_push($this->fields, new WizardField($name, $label, $type, $validation, $outputError)); // push the newly created object;
+		function addField($name, $label, $type, $validation, $outputError, $params = null) {
+			array_push($this->fields, new WizardField($name, $label, $type, $validation, $outputError, $params)); // push the newly created object;
 		}
 
 		// prerender the form
