@@ -153,6 +153,10 @@
 		private function save() {
 			$form = unserialize($this->forms[$this->currentFormIndex]); // current form
 
+			// reset the data first
+			$this->data = array();
+
+			// save the new data
 			foreach($_POST as $key => $value) {
 				$this->data[$key] = $value;
 			}

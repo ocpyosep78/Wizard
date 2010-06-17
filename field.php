@@ -16,7 +16,17 @@
 		private $outputError;
 		private $params;
 
-		function __construct($name, $label, $type, $validation, $outputError, $params = null) {
+		/*
+			validation:
+				string
+				email
+				numeric
+				null
+			params:
+				options => array();
+				required => boolean >> default is true (todo)
+		*/
+		function __construct($name, $label, $type, $validation = null, $outputError = null, $params = null) {
 			$this->validator = new WizardFormValidator();
 		
 			$this->name = $name;
@@ -62,6 +72,9 @@
 				case 'email':
 					return $this->validator->validateEmail($_POST[$this->name]);
 					break;
+				default:
+					return 1; // no validation needed
+					break;
 			}
 		}
 
@@ -92,7 +105,8 @@
 
 		// draw a checkbox
 		function checkBox($data = null) {
-			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\''. $data .'\'/>';
+			$checked = isSet($data) ? 'checked=\'true\'' : '';
+			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\'Yes\' '. $checked .'/>';
 		}
 
 		// drop a dropdown
