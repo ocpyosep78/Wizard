@@ -106,7 +106,7 @@
 		// draw a checkbox
 		function checkBox($data = null) {
 			$checked = isSet($data) ? 'checked=\'true\'' : '';
-			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\'Yes\' '. $checked .'/>';
+			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\'[X]\' '. $checked .'/>';
 		}
 
 		// drop a dropdown
