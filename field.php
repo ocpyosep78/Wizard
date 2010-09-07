@@ -31,10 +31,9 @@
 				options => array();
 				required => boolean >> default is true
 		*/
-
 		function __construct($name, $label, $type, $validation = null, $outputError = null, $params = null) {
 			$this->validator = new WizardFormValidator();
-
+		
 			$this->name = $name;
 			$this->label = $label;
 			$this->type = $type;
@@ -62,15 +61,15 @@
 			
 			return $output;
 		}
-
+		
 		// validate the field, result 0 or 1 (1 is success)
 		function validate() {
 			// required or not (redo this at some later date)
 			$required = true;
-
+			
 			if($this->params['required'] == 'false')
 				$required = false;
-
+			
 			switch($this->validation) {
 				case 'numeric':
 					return $this->validator->validateNumeric($_POST[$this->name], $required);
@@ -107,22 +106,26 @@
 
 		// draw a basic text input
 		function textField($data = null) {
+			$this->label .= $this->params['required'] ? ' * ' : '';
 			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'text\' class=\'wizardTextField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\''. $data .'\'/>';
 		}
 		
 		// draw a basic text area
 		function textAreaField($data = null) {
+			$this->label .= $this->params['required'] ? ' * ' : '';
 			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'>'. $data .'</textarea>';
 		}
 
 		// draw a checkbox
 		function checkBox($data = null) {
+			$this->label .= $this->params['required'] ? ' * ' : '';
 			$checked = isSet($data) ? 'checked=\'true\'' : '';
 			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\'[X]\' '. $checked .'/>';
 		}
 
 		// drop a dropdown
 		function dropdown($data = null) {
+			$this->label .= $this->params['required'] ? ' * ' : '';
 			$output = '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><select class=\'wizardDropdown\' id=\''. $this->name .'\' name=\''. $this->name .'\'/>';
 			foreach($this->params as $option) {
 				$selected = $data == $option ? 'selected=\'true\'' : '';

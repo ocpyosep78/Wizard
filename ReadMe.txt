@@ -32,7 +32,7 @@ How to use:
 		null
 	params:
 		options => array();
-		required => boolean >> default is true (todo)
+		required => boolean >> default is true
 
 4) How to instantiate wizard:
 
