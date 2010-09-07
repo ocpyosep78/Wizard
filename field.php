@@ -17,6 +17,11 @@
 		private $params;
 
 		/*
+			types:
+				text
+				textarea
+				checkbox
+				dropdown
 			validation:
 				string
 				email
