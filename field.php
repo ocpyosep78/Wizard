@@ -29,11 +29,12 @@
 				null
 			params:
 				options => array();
-				required => boolean >> default is true (todo)
+				required => boolean >> default is true
 		*/
+
 		function __construct($name, $label, $type, $validation = null, $outputError = null, $params = null) {
 			$this->validator = new WizardFormValidator();
-		
+
 			$this->name = $name;
 			$this->label = $label;
 			$this->type = $type;
@@ -45,7 +46,6 @@
 		// execute and get output of the field
 		function render($data = null) {
 			$output;
-
 			switch($this->type) {
 				case 'text':
 					$output = $this->textField($data);
@@ -62,21 +62,28 @@
 			
 			return $output;
 		}
-		
+
 		// validate the field, result 0 or 1 (1 is success)
 		function validate() {
+			// required or not (redo this at some later date)
+			$required = true;
+
+			if($this->params['required'] == 'false')
+				$required = false;
+
 			switch($this->validation) {
 				case 'numeric':
-					return $this->validator->validateNumeric($_POST[$this->name]);
+					return $this->validator->validateNumeric($_POST[$this->name], $required);
 					break;
 
 				case 'string':
-					return $this->validator->validateString($_POST[$this->name]);
+					return $this->validator->validateString($_POST[$this->name], $required);
 					break;					
 
 				case 'email':
-					return $this->validator->validateEmail($_POST[$this->name]);
+					return $this->validator->validateEmail($_POST[$this->name], $required);
 					break;
+					
 				default:
 					return 1; // no validation needed
 					break;
@@ -126,3 +133,4 @@
 		}
 	}
 ?>
+
