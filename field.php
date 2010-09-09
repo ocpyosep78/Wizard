@@ -106,26 +106,26 @@
 
 		// draw a basic text input
 		function textField($data = null) {
-			$this->label .= $this->params['required'] ? ' * ' : '';
+			$this->label .= $this->params['required'] ? '' : ' * ';
 			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'text\' class=\'wizardTextField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\''. $data .'\'/>';
 		}
 		
 		// draw a basic text area
 		function textAreaField($data = null) {
-			$this->label .= $this->params['required'] ? ' * ' : '';
+			$this->label .= $this->params['required'] ? '' : ' * ';
 			return '<label for=\''. $this->name .'\' class=\'wizardLabel\'>'. $this->label .'</label><textarea class=\'wizardTextAreaField\' id=\''. $this->name .'\' name=\''. $this->name .'\'>'. $data .'</textarea>';
 		}
 
 		// draw a checkbox
 		function checkBox($data = null) {
-			$this->label .= $this->params['required'] ? ' * ' : '';
+			$this->label .= $this->params['required'] ? '' : ' * ';
 			$checked = isSet($data) ? 'checked=\'true\'' : '';
 			return '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><input type=\'checkbox\' class=\'wizardCheckboxField\' id=\''. $this->name .'\' name=\''. $this->name .'\' value=\'[X]\' '. $checked .'/>';
 		}
 
 		// drop a dropdown
 		function dropdown($data = null) {
-			$this->label .= $this->params['required'] ? ' * ' : '';
+			$this->label .= $this->params['required'] ? '' : ' * ';
 			$output = '<label for=\''. $this->name.'\' class=\'wizardLabel\'>'. $this->label .'</label><select class=\'wizardDropdown\' id=\''. $this->name .'\' name=\''. $this->name .'\'/>';
 			foreach($this->params as $option) {
 				$selected = $data == $option ? 'selected=\'true\'' : '';
@@ -136,4 +136,3 @@
 		}
 	}
 ?>
-
